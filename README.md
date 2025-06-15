@@ -22,104 +22,67 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+# Taxi24 Ride-Hailing Platform
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Taxi24 is a white-label ride-hailing platform built as a single NestJS microservice (Node.js + TypeScript) using PostgreSQL (with Prisma ORM). The service exposes REST APIs for managing drivers, passengers, trips, and invoices, following Clean Architecture principles. The codebase is modular, testable, and well-documented.
 
-## Installation
+---
 
-```bash
-$ npm install
-```
-
-## Running the app
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Local PostgreSQL with Docker
-
-You can run a local PostgreSQL instance using Docker. This is the recommended way for local development.
+## Getting Started (Step-by-Step Guide)
 
 ### Prerequisites
-- [Docker](https://www.docker.com/products/docker-desktop) installed
-- [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/) (or npm/yarn)
+- [Node.js](https://nodejs.org/) (v16+ recommended)
+- [pnpm](https://pnpm.io/) (or npm/yarn)
+- [Docker](https://www.docker.com/products/docker-desktop) (for PostgreSQL)
 
-### Start PostgreSQL
-
+### 1. Clone the Repository
 ```bash
-# Start the PostgreSQL container
-$ docker-compose up -d
+git clone <your-repo-url>
+cd taxi24
 ```
 
+### 2. Install Dependencies
+```bash
+pnpm install
+```
+
+### 3. Start PostgreSQL with Docker
+```bash
+docker-compose up -d
+```
 This will start a PostgreSQL server on `localhost:5432` with:
 - user: `postgres`
 - password: `postgres`
 - database: `taxi24`
 
-### Configure Environment
-
+### 4. Configure Environment Variables
 Check your `.env` file and ensure `DATABASE_URL` is set to:
-
 ```
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/taxi24"
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/taxi24
 ```
 
-If you use Prisma, you may need to update the connection string accordingly.
-
-### Run Migrations & Seed Data
-
+### 5. Run Database Migrations
 ```bash
-# Run Prisma migrations
-$ npx prisma migrate dev --name init
-
-# Seed the database (if you have a seed script)
-$ npx prisma db seed
+pnpm prisma migrate deploy
 ```
 
-### Run the App
-
+### 6. Seed the Database
 ```bash
-$ pnpm install
-$ pnpm start:dev
+pnpm prisma db seed
+```
+
+### 7. Start the Application
+```bash
+pnpm start:dev
+```
+
+### 8. Run Tests
+```bash
+pnpm run test         # Unit tests
+pnpm run test:e2e     # End-to-end tests
 ```
 
 ---
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
 
 ## REST API Endpoints
 
@@ -139,54 +102,55 @@ Nest is [MIT licensed](LICENSE).
 - `PUT /trips/{tripId}/complete` — Complete a trip
 - `GET /trips/active` — List all active trips
 
-### Invoices (Stretch Goal)
+### Invoices
 - `GET /invoices/trip/{tripId}` — Get invoice for a trip
 
 ---
 
-## Database Schema (Prisma)
+## Database Schema (Prisma, snake_case)
 
-See `prisma/schema.prisma` for the full schema. Example SQL tables:
+See `prisma/schema.prisma` for the full schema. Example tables (snake_case):
 
 ```sql
-CREATE TABLE "Driver" (
+CREATE TABLE driver (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR NOT NULL,
   latitude DOUBLE PRECISION NOT NULL,
   longitude DOUBLE PRECISION NOT NULL,
-  isAvailable BOOLEAN DEFAULT TRUE,
-  createdAt TIMESTAMP DEFAULT NOW(),
-  updatedAt TIMESTAMP DEFAULT NOW()
+  is_available BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
 );
 
-CREATE TABLE "Passenger" (
+CREATE TABLE passenger (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR NOT NULL,
   latitude DOUBLE PRECISION NOT NULL,
   longitude DOUBLE PRECISION NOT NULL,
-  createdAt TIMESTAMP DEFAULT NOW(),
-  updatedAt TIMESTAMP DEFAULT NOW()
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
 );
 
-CREATE TABLE "Trip" (
+CREATE TABLE trip (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  driverId UUID REFERENCES "Driver"(id),
-  passengerId UUID REFERENCES "Passenger"(id),
+  driver_id UUID REFERENCES driver(id),
+  passenger_id UUID REFERENCES passenger(id),
   status VARCHAR NOT NULL,
-  startLat DOUBLE PRECISION NOT NULL,
-  startLng DOUBLE PRECISION NOT NULL,
-  endLat DOUBLE PRECISION,
-  endLng DOUBLE PRECISION,
-  startedAt TIMESTAMP DEFAULT NOW(),
-  completedAt TIMESTAMP,
-  invoiceId UUID
+  start_lat DOUBLE PRECISION NOT NULL,
+  start_lng DOUBLE PRECISION NOT NULL,
+  end_lat DOUBLE PRECISION,
+  end_lng DOUBLE PRECISION,
+  started_at TIMESTAMP DEFAULT NOW(),
+  completed_at TIMESTAMP,
+  CONSTRAINT fk_driver FOREIGN KEY(driver_id) REFERENCES driver(id),
+  CONSTRAINT fk_passenger FOREIGN KEY(passenger_id) REFERENCES passenger(id)
 );
 
-CREATE TABLE "Invoice" (
+CREATE TABLE invoice (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  tripId UUID UNIQUE REFERENCES "Trip"(id),
+  trip_id UUID UNIQUE REFERENCES trip(id),
   amount DOUBLE PRECISION NOT NULL,
-  issuedAt TIMESTAMP DEFAULT NOW()
+  issued_at TIMESTAMP DEFAULT NOW()
 );
 ```
 
@@ -196,10 +160,10 @@ CREATE TABLE "Invoice" (
 
 ```bash
 # Run all tests
-$ pnpm run test
+pnpm run test
 
 # Run e2e tests
-$ pnpm run test:e2e
+pnpm run test:e2e
 ```
 
 ---
@@ -211,5 +175,3 @@ $ pnpm run test:e2e
 - Geospatial queries use Haversine formula in raw SQL for driver proximity
 - Invoice is generated automatically when a trip is completed
 - Seed data covers all use cases
-
----
