@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { PassengerRepository } from '../../domain/passenger/passenger.repository';
 import { PassengerDto } from './dto/passenger.dto';
 
 @Injectable()
 export class PassengerService {
-  constructor(private readonly passengerRepo: PassengerRepository) {}
+  constructor(@Inject('PassengerRepository') private readonly passengerRepo: PassengerRepository) {}
 
   async findAll(): Promise<PassengerDto[]> {
     return (await this.passengerRepo.findAll()) as PassengerDto[];

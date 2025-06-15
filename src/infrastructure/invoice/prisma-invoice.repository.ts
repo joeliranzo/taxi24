@@ -11,7 +11,11 @@ export class PrismaInvoiceRepository implements InvoiceRepository {
     return this.prisma.invoice.findUnique({ where: { tripId } });
   }
 
-  async create(invoice: Partial<Invoice>): Promise<Invoice> {
-    return this.prisma.invoice.create({ data: invoice });
+  async create(invoice: { tripId: string; amount: number; issuedAt?: Date }): Promise<Invoice> {
+    return this.prisma.invoice.create({ data: {
+      tripId: invoice.tripId,
+      amount: invoice.amount,
+      issuedAt: invoice.issuedAt ?? new Date(),
+    }});
   }
 }

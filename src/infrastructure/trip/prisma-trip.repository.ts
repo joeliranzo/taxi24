@@ -11,18 +11,28 @@ export class PrismaTripRepository implements TripRepository {
     return this.prisma.trip.findMany({ where: { status: 'ACTIVE' } });
   }
 
-  async create(trip: Partial<Trip>): Promise<Trip> {
-    // Assign nearest available driver to passenger
-    const driver = await this.prisma.driver.findFirst({ where: { isAvailable: true } });
-    if (!driver) throw new Error('No available drivers');
+  async create(trip: { driverId: string; passengerId: string; startLat: number; startLng: number; status?: 'ACTIVE' | 'COMPLETED'; endLat?: number; endLng?: number; startedAt?: Date; completedAt?: Date }): Promise<Trip> {
+    // Assign nearest available driver to passenger if not provided
+    let driverId = trip.driverId;
+    if (!driverId) {
+      const driver = await this.prisma.driver.findFirst({ where: { isAvailable: true } });
+      if (!driver) throw new Error('No available drivers');
+      driverId = driver.id;
+      await this.prisma.driver.update({ where: { id: driverId }, data: { isAvailable: false } });
+    }
     const createdTrip = await this.prisma.trip.create({
       data: {
-        ...trip,
-        driverId: driver.id,
-        status: 'ACTIVE',
+        driverId,
+        passengerId: trip.passengerId,
+        startLat: trip.startLat,
+        startLng: trip.startLng,
+        status: trip.status ?? 'ACTIVE',
+        endLat: trip.endLat,
+        endLng: trip.endLng,
+        startedAt: trip.startedAt,
+        completedAt: trip.completedAt,
       },
     });
-    await this.prisma.driver.update({ where: { id: driver.id }, data: { isAvailable: false } });
     return createdTrip;
   }
 

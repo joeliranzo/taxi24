@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { TripRepository } from '../../domain/trip/trip.repository';
 import { TripDto } from './dto/trip.dto';
 
 @Injectable()
 export class TripService {
-  constructor(private readonly tripRepo: TripRepository) {}
+  constructor(@Inject('TripRepository') private readonly tripRepo: TripRepository) {}
 
   async findActive(): Promise<TripDto[]> {
     return (await this.tripRepo.findActive()) as TripDto[];

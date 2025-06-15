@@ -36,11 +36,16 @@ export class PrismaDriverRepository implements DriverRepository {
     return this.prisma.driver.findUnique({ where: { id } });
   }
 
-  async create(driver: Partial<Driver>): Promise<Driver> {
-    return this.prisma.driver.create({ data: driver });
+  async create(driver: { name: string; latitude: number; longitude: number; isAvailable?: boolean }): Promise<Driver> {
+    return this.prisma.driver.create({ data: {
+      name: driver.name,
+      latitude: driver.latitude,
+      longitude: driver.longitude,
+      isAvailable: driver.isAvailable ?? true,
+    }});
   }
 
-  async update(id: string, driver: Partial<Driver>): Promise<Driver> {
+  async update(id: string, driver: { name?: string; latitude?: number; longitude?: number; isAvailable?: boolean }): Promise<Driver> {
     return this.prisma.driver.update({ where: { id }, data: driver });
   }
 }

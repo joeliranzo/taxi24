@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { DriverRepository } from '../../domain/driver/driver.repository';
 import { DriverDto } from './dto/driver.dto';
 
 @Injectable()
 export class DriverService {
-  constructor(private readonly driverRepo: DriverRepository) {}
+  constructor(@Inject('DriverRepository') private readonly driverRepo: DriverRepository) {}
 
   async findAll(): Promise<DriverDto[]> {
     return (await this.driverRepo.findAll()) as DriverDto[];

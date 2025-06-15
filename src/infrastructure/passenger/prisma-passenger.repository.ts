@@ -34,11 +34,15 @@ export class PrismaPassengerRepository implements PassengerRepository {
     );
   }
 
-  async create(passenger: Partial<Passenger>): Promise<Passenger> {
-    return this.prisma.passenger.create({ data: passenger });
+  async create(passenger: { name: string; latitude: number; longitude: number }): Promise<Passenger> {
+    return this.prisma.passenger.create({ data: {
+      name: passenger.name,
+      latitude: passenger.latitude,
+      longitude: passenger.longitude,
+    }});
   }
 
-  async update(id: string, passenger: Partial<Passenger>): Promise<Passenger> {
+  async update(id: string, passenger: { name?: string; latitude?: number; longitude?: number }): Promise<Passenger> {
     return this.prisma.passenger.update({ where: { id }, data: passenger });
   }
 }
