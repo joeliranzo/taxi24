@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Driver {
+  id           String   @id @default(uuid())
+  name         String
+  latitude     Float
+  longitude    Float
+  isAvailable  Boolean  @default(true)
+  trips        Trip[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Passenger {
+  id           String   @id @default(uuid())
+  name         String
+  latitude     Float
+  longitude    Float
+  trips        Trip[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Trip {
+  id           String   @id @default(uuid())
+  driverId     String
+  passengerId  String
+  status       TripStatus @default(ACTIVE)
+  startLat     Float
+  startLng     Float
+  endLat       Float?
+  endLng       Float?
+  startedAt    DateTime @default(now())
+  completedAt  DateTime?
+  driver       Driver   @relation(fields: [driverId], references: [id])
+  passenger    Passenger @relation(fields: [passengerId], references: [id])
+  invoice      Invoice?
+}
+
+enum TripStatus {
+  ACTIVE
+  COMPLETED
+}
+
+model Invoice {
+  id        String   @id @default(uuid())
+  tripId    String   @unique
+  amount    Float
+  issuedAt  DateTime @default(now())
+  trip      Trip     @relation(fields: [tripId], references: [id])
+}

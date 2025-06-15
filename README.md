@@ -58,6 +58,55 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## Local PostgreSQL with Docker
+
+You can run a local PostgreSQL instance using Docker. This is the recommended way for local development.
+
+### Prerequisites
+- [Docker](https://www.docker.com/products/docker-desktop) installed
+- [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/) (or npm/yarn)
+
+### Start PostgreSQL
+
+```bash
+# Start the PostgreSQL container
+$ docker-compose up -d
+```
+
+This will start a PostgreSQL server on `localhost:5432` with:
+- user: `postgres`
+- password: `postgres`
+- database: `taxi24`
+
+### Configure Environment
+
+Check your `.env` file and ensure `DATABASE_URL` is set to:
+
+```
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/taxi24"
+```
+
+If you use Prisma, you may need to update the connection string accordingly.
+
+### Run Migrations & Seed Data
+
+```bash
+# Run Prisma migrations
+$ npx prisma migrate dev --name init
+
+# Seed the database (if you have a seed script)
+$ npx prisma db seed
+```
+
+### Run the App
+
+```bash
+$ pnpm install
+$ pnpm start:dev
+```
+
+---
+
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
