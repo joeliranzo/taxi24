@@ -14,40 +14,46 @@ datasource db {
 }
 
 model Driver {
-  id           String   @id @default(uuid())
-  name         String
-  latitude     Float
-  longitude    Float
-  isAvailable  Boolean  @default(true)
+  id           String   @id @default(uuid()) @map("id")
+  name         String   @map("name")
+  latitude     Float    @map("latitude")
+  longitude    Float    @map("longitude")
+  isAvailable  Boolean  @default(true) @map("is_available")
   trips        Trip[]
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("driver")
 }
 
 model Passenger {
-  id           String   @id @default(uuid())
-  name         String
-  latitude     Float
-  longitude    Float
+  id           String   @id @default(uuid()) @map("id")
+  name         String   @map("name")
+  latitude     Float    @map("latitude")
+  longitude    Float    @map("longitude")
   trips        Trip[]
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("passenger")
 }
 
 model Trip {
-  id           String   @id @default(uuid())
-  driverId     String
-  passengerId  String
-  status       TripStatus @default(ACTIVE)
-  startLat     Float
-  startLng     Float
-  endLat       Float?
-  endLng       Float?
-  startedAt    DateTime @default(now())
-  completedAt  DateTime?
-  driver       Driver   @relation(fields: [driverId], references: [id])
-  passenger    Passenger @relation(fields: [passengerId], references: [id])
+  id           String     @id @default(uuid()) @map("id")
+  driverId     String     @map("driver_id")
+  passengerId  String     @map("passenger_id")
+  status       TripStatus @default(ACTIVE) @map("status")
+  startLat     Float      @map("start_lat")
+  startLng     Float      @map("start_lng")
+  endLat       Float?     @map("end_lat")
+  endLng       Float?     @map("end_lng")
+  startedAt    DateTime   @default(now()) @map("started_at")
+  completedAt  DateTime?  @map("completed_at")
+  driver       Driver     @relation(fields: [driverId], references: [id])
+  passenger    Passenger  @relation(fields: [passengerId], references: [id])
   invoice      Invoice?
+
+  @@map("trip")
 }
 
 enum TripStatus {
@@ -56,9 +62,11 @@ enum TripStatus {
 }
 
 model Invoice {
-  id        String   @id @default(uuid())
-  tripId    String   @unique
-  amount    Float
-  issuedAt  DateTime @default(now())
+  id        String   @id @default(uuid()) @map("id")
+  tripId    String   @unique @map("trip_id")
+  amount    Float    @map("amount")
+  issuedAt  DateTime @default(now()) @map("issued_at")
   trip      Trip     @relation(fields: [tripId], references: [id])
+
+  @@map("invoice")
 }
