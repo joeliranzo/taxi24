@@ -12,6 +12,7 @@ async function main() {
       { name: 'Diana Driver', latitude: 40.7158, longitude: -74.0030, isAvailable: false },
     ],
   });
+  console.log('Seeded drivers');
 
   // Seed Passengers
   await prisma.passenger.createMany({
@@ -20,6 +21,7 @@ async function main() {
       { name: 'Frank Passenger', latitude: 40.7160, longitude: -74.0080 },
     ],
   });
+  console.log('Seeded passengers');
 
   // Seed Trips (one active, one completed)
   const [driver1, driver2] = await prisma.driver.findMany({ take: 2 });
@@ -34,6 +36,7 @@ async function main() {
       startLng: -74.0020,
     },
   });
+  console.log('Seeded active trip');
 
   const trip2 = await prisma.trip.create({
     data: {
@@ -47,6 +50,7 @@ async function main() {
       completedAt: new Date(),
     },
   });
+  console.log('Seeded completed trip');
 
   // Seed Invoice for completed trip
   await prisma.invoice.create({
@@ -55,6 +59,7 @@ async function main() {
       amount: 15.5,
     },
   });
+  console.log('Seeded invoice for completed trip');
 }
 
 main()
