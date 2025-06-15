@@ -18,16 +18,18 @@ export class PrismaDriverRepository implements DriverRepository {
   async findNearby(lat: number, lng: number, radius: number): Promise<Driver[]> {
     // Haversine formula for 3km radius
     return this.prisma.$queryRawUnsafe(
-      `SELECT *, (
-        6371 * acos(
-          cos(radians(${lat})) * cos(radians(latitude)) *
-          cos(radians(longitude) - radians(${lng})) +
-          sin(radians(${lat})) * sin(radians(latitude))
-        )
-      ) AS distance
-      FROM "Driver"
-      WHERE isAvailable = true
-      HAVING distance <= ${radius}
+      `SELECT * FROM (
+        SELECT *, (
+          6371 * acos(
+            cos(radians(${lat})) * cos(radians(latitude)) *
+            cos(radians(longitude) - radians(${lng})) +
+            sin(radians(${lat})) * sin(radians(latitude))
+          )
+        ) AS distance
+        FROM driver
+        WHERE is_available = true
+      ) AS sub
+      WHERE distance <= ${radius}
       ORDER BY distance ASC`
     );
   }

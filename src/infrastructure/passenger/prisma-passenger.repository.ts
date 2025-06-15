@@ -27,8 +27,8 @@ export class PrismaPassengerRepository implements PassengerRepository {
           sin(radians(${passenger.latitude})) * sin(radians(latitude))
         )
       ) AS distance
-      FROM "Driver"
-      WHERE isAvailable = true
+      FROM driver
+      WHERE is_available = true
       ORDER BY distance ASC
       LIMIT ${limit}`
     );
