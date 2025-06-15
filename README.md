@@ -120,3 +120,96 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+## REST API Endpoints
+
+### Drivers
+- `GET /drivers` — List all drivers
+- `GET /drivers/available` — List available drivers
+- `GET /drivers/nearby?lat={lat}&lng={lng}&radius=3` — List available drivers within 3km of a location
+- `GET /drivers/{driverId}` — Fetch a single driver by ID
+
+### Passengers
+- `GET /passengers` — List all passengers
+- `GET /passengers/{passengerId}` — Fetch a single passenger by ID
+- `GET /passengers/{passengerId}/nearest-drivers?limit=3` — Return the three closest drivers to that passenger’s pick-up point
+
+### Trips
+- `POST /trips` — Create a new trip, assigning a driver to a passenger
+- `PUT /trips/{tripId}/complete` — Complete a trip
+- `GET /trips/active` — List all active trips
+
+### Invoices (Stretch Goal)
+- `GET /invoices/trip/{tripId}` — Get invoice for a trip
+
+---
+
+## Database Schema (Prisma)
+
+See `prisma/schema.prisma` for the full schema. Example SQL tables:
+
+```sql
+CREATE TABLE "Driver" (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR NOT NULL,
+  latitude DOUBLE PRECISION NOT NULL,
+  longitude DOUBLE PRECISION NOT NULL,
+  isAvailable BOOLEAN DEFAULT TRUE,
+  createdAt TIMESTAMP DEFAULT NOW(),
+  updatedAt TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE "Passenger" (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR NOT NULL,
+  latitude DOUBLE PRECISION NOT NULL,
+  longitude DOUBLE PRECISION NOT NULL,
+  createdAt TIMESTAMP DEFAULT NOW(),
+  updatedAt TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE "Trip" (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  driverId UUID REFERENCES "Driver"(id),
+  passengerId UUID REFERENCES "Passenger"(id),
+  status VARCHAR NOT NULL,
+  startLat DOUBLE PRECISION NOT NULL,
+  startLng DOUBLE PRECISION NOT NULL,
+  endLat DOUBLE PRECISION,
+  endLng DOUBLE PRECISION,
+  startedAt TIMESTAMP DEFAULT NOW(),
+  completedAt TIMESTAMP,
+  invoiceId UUID
+);
+
+CREATE TABLE "Invoice" (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tripId UUID UNIQUE REFERENCES "Trip"(id),
+  amount DOUBLE PRECISION NOT NULL,
+  issuedAt TIMESTAMP DEFAULT NOW()
+);
+```
+
+---
+
+## Testing
+
+```bash
+# Run all tests
+$ pnpm run test
+
+# Run e2e tests
+$ pnpm run test:e2e
+```
+
+---
+
+## Design Decisions
+- Clean Architecture: domain, application, infrastructure, presentation layers
+- Prisma ORM for type-safe DB access
+- Modular, testable code (DTOs, services, repositories)
+- Geospatial queries use Haversine formula in raw SQL for driver proximity
+- Invoice is generated automatically when a trip is completed
+- Seed data covers all use cases
+
+---
