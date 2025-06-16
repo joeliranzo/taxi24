@@ -36,10 +36,19 @@ export class PrismaTripRepository implements TripRepository {
     return createdTrip;
   }
 
-  async complete(tripId: string): Promise<Trip> {
+  async complete(tripId: string, update?: { endLat?: number; endLng?: number; status?: 'ACTIVE' | 'COMPLETED'; completedAt?: Date }): Promise<Trip> {
+    const existing = await this.prisma.trip.findUnique({ where: { id: tripId } });
+    if (!existing) {
+      throw new Error('Trip not found');
+    }
     const trip = await this.prisma.trip.update({
       where: { id: tripId },
-      data: { status: 'COMPLETED', completedAt: new Date() },
+      data: {
+        status: update?.status ?? 'COMPLETED',
+        completedAt: update?.completedAt ?? new Date(),
+        endLat: update?.endLat,
+        endLng: update?.endLng,
+      },
     });
     await this.prisma.driver.update({ where: { id: trip.driverId }, data: { isAvailable: true } });
     // Optionally, create invoice here

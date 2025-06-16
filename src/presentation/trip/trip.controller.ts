@@ -2,6 +2,7 @@ import { Controller, Get, Post, Put, Body, Param } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { TripService } from '../../application/trip/trip.service';
 import { TripDto } from '../../application/trip/dto/trip.dto';
+import { CreateTripDto, UpdateTripDto } from '../../application/trip/dto/trip-action.dto';
 
 @ApiTags('trips')
 @Controller('trips')
@@ -18,7 +19,7 @@ export class TripController {
   @Post()
   @ApiOperation({ summary: 'Create a new trip, assigning a driver to a passenger' })
   @ApiResponse({ status: 201, type: TripDto })
-  create(@Body() trip: any) {
+  create(@Body() trip: CreateTripDto) {
     return this.tripService.create(trip);
   }
 
@@ -26,7 +27,7 @@ export class TripController {
   @ApiOperation({ summary: 'Complete a trip' })
   @ApiParam({ name: 'id', type: String })
   @ApiResponse({ status: 200, type: TripDto })
-  complete(@Param('id') id: string) {
-    return this.tripService.complete(id);
+  complete(@Param('id') id: string, @Body() update: UpdateTripDto) {
+    return this.tripService.complete(id, update);
   }
 }
