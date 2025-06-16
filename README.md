@@ -107,6 +107,32 @@ pnpm run test:e2e     # End-to-end tests
 
 ---
 
+## API Documentation (Swagger/OpenAPI)
+
+Interactive API documentation is available via Swagger UI:
+
+- Visit [http://localhost:3000/api](http://localhost:3000/api) after starting the app.
+- All endpoints, request/response schemas, and DTOs are documented automatically.
+
+---
+
+## Project Structure
+
+```
+├── src/
+│   ├── domain/         # Entities & repositories (domain logic)
+│   ├── application/    # Services, DTOs (use cases)
+│   ├── infrastructure/ # Prisma repositories (DB access)
+│   ├── presentation/   # Controllers (REST API)
+│   └── main.ts, app.module.ts, ...
+├── prisma/             # Prisma schema, migrations, seed data
+├── test/               # e2e and unit tests
+├── docker-compose.yml  # PostgreSQL container
+└── ...
+```
+
+---
+
 ## Database Schema (Prisma, snake_case)
 
 See `prisma/schema.prisma` for the full schema. Example tables (snake_case):
@@ -156,6 +182,20 @@ CREATE TABLE invoice (
 
 ---
 
+## Seed Data
+
+Demo data is automatically seeded for drivers, passengers, trips y invoices. You can edit or extend the seed logic in `prisma/seed.ts`.
+
+---
+
+## Error Handling
+
+- 404 Not Found: Returned if a resource (e.g., trip, driver) does not exist.
+- 400 Bad Request: Returned for invalid input or validation errors.
+- 500 Internal Server Error: Returned for unexpected server errors.
+
+---
+
 ## Testing
 
 ```bash
@@ -175,3 +215,9 @@ pnpm run test:e2e
 - Geospatial queries use Haversine formula in raw SQL for driver proximity
 - Invoice is generated automatically when a trip is completed
 - Seed data covers all use cases
+
+---
+
+## Contributing
+
+Contributions are welcome! Please fork the repo and submit a pull request. For major changes, open an issue first to discuss what you would like to change.
