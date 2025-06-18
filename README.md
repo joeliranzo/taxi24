@@ -1,134 +1,115 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Plataforma de Transporte Taxi24
 
-<p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-# Taxi24 Ride-Hailing Platform
-
-Taxi24 is a white-label ride-hailing platform built as a single NestJS microservice (Node.js + TypeScript) using PostgreSQL (with Prisma ORM). The service exposes REST APIs for managing drivers, passengers, trips, and invoices, following Clean Architecture principles. The codebase is modular, testable, and well-documented.
+Taxi24 es una plataforma de transporte marca blanca construida como un solo microservicio en NestJS (**Node.js + TypeScript**) utilizando **PostgreSQL** (con Prisma ORM). El servicio expone APIs REST para gestionar conductores, pasajeros, viajes y facturas, siguiendo principios de Clean Architecture. El código es modular, testeable y bien documentado.
 
 ---
 
-## Getting Started (Step-by-Step Guide)
+## Primeros Pasos (Guía paso a paso)
 
-### Prerequisites
+### Requisitos
 
-- [Node.js](https://nodejs.org/) (v16+ recommended)
-- [pnpm](https://pnpm.io/) (or npm/yarn)
-- [Docker](https://www.docker.com/products/docker-desktop) (for PostgreSQL)
+- [Node.js](https://nodejs.org/) (v16+ recomendado)
+- [pnpm](https://pnpm.io/) (o npm/yarn)
+- [Docker](https://www.docker.com/products/docker-desktop) (para PostgreSQL)
 
-### 1. Clone the Repository
+### 1. Clonar el Repositorio
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/joeliranzo/taxi24
 cd taxi24
 ```
 
-### 2. Install Dependencies
+### 2. Instalar dependencias
 
 ```bash
 pnpm install
 ```
 
-### 3. Start PostgreSQL with Docker
+### 3. Iniciar Postgres con Docker
 
 ```bash
 docker-compose up -d
 ```
 
-This will start a PostgreSQL server on `localhost:5432` with:
+Esto iniciará un servidor PostgreSQL en `localhost:5432` con:
 
-- user: `postgres`
-- password: `postgres`
-- database: `taxi24`
+- usuario: `postgres`
+- contrasena: `postgres`
+- base de datos: `taxi24`
 
-### 4. Configure Environment Variables
+### 4. Configura las Variables de Entorno
 
-Check your `.env` file and ensure `DATABASE_URL` is set to:
+Verifica tu archivo `.env` y asegúrate de que `DATABASE_URL` tenga este valor:
 
 ```
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/taxi24
 ```
 
-### 5. Run Database Migrations
+### 5. Ejecuta las Migraciones
 
 ```bash
 pnpm prisma migrate deploy
 ```
 
-### 6. Seed the Database
+### 6. Llena la Base de Datos (Seed)
 
 ```bash
 pnpm prisma db seed
 ```
 
-### 7. Start the Application
+### 7. Inicia la Aplicación
 
 ```bash
 pnpm start:dev
 ```
 
-### 8. Run Tests
+### 8. Ejecuta las Pruebas
 
 ```bash
-pnpm run test:e2e     # End-to-end tests
+pnpm run test:e2e
 ```
 
 ---
 
-## REST API Endpoints
-
-### Drivers
-
-- `GET /drivers` — List all drivers
-- `GET /drivers/available` — List available drivers
-- `GET /drivers/nearby?lat={lat}&lng={lng}&radius=3` — List available drivers within 3km of a location
-- `GET /drivers/{driverId}` — Fetch a single driver by ID
+## Endpoints de la API Rest
 
 ### Passengers
 
-- `GET /passengers` — List all passengers
-- `GET /passengers/{passengerId}` — Fetch a single passenger by ID
-- `GET /passengers/{passengerId}/nearest-drivers?limit=3` — Return the three closest drivers to that passenger’s pick-up point
+### Conductores
 
-### Trips
+* `GET /drivers` — Lista todos los conductores
+* `GET /drivers/available` — Lista conductores disponibles
+* `GET /drivers/nearby?lat={lat}&lng={lng}&radius=3` — Lista conductores disponibles en 3km de una ubicación
+* `GET /drivers/{driverId}` — Consulta un conductor por ID
 
-- `POST /trips` — Create a new trip, assigning a driver to a passenger
-- `PUT /trips/{tripId}/complete` — Complete a trip
-- `GET /trips/active` — List all active trips
+### Pasajeros
 
-### Invoices
+* `GET /passengers` — Lista todos los pasajeros
+* `GET /passengers/{passengerId}` — Consulta un pasajero por ID
+* `GET /passengers/{passengerId}/nearest-drivers?limit=3` — Devuelve los tres conductores más cercanos al punto de recogida del pasajero
 
-- `GET /invoices/trip/{tripId}` — Get invoice for a trip
+### Viajes
+
+* `POST /trips` — Crea un nuevo viaje, asignando un conductor a un pasajero
+* `PUT /trips/{tripId}/complete` — Completa un viaje
+* `GET /trips/active` — Lista todos los viajes activos
+
+### Facturas
+
+* `GET /invoices/trip/{tripId}` — Obtiene la factura de un viaje
+
+## Documentación de la API (Swagger/OpenAPI)
+
+Documentación interactiva disponible con Swagger UI:
+
+* Visita [http://localhost:3000/api](http://localhost:3000/api) luego de iniciar la app.
+* Todos los endpoints, esquemas de solicitudes/respuestas y DTOs están documentados automáticamente.
 
 ---
 
-## API Documentation (Swagger/OpenAPI)
 
-Interactive API documentation is available via Swagger UI:
 
-- Visit [http://localhost:3000/api](http://localhost:3000/api) after starting the app.
-- All endpoints, request/response schemas, and DTOs are documented automatically.
-
----
-
-## Project Structure
+## Estructura del Proyecto
 
 ```
 ├── src/
@@ -145,7 +126,7 @@ Interactive API documentation is available via Swagger UI:
 
 ---
 
-## Database Schema (Prisma, snake_case)
+## Esquema de Base de Datos (Prisma, snake_case)
 
 See `prisma/schema.prisma` for the full schema. Example tables (snake_case):
 
@@ -194,46 +175,34 @@ CREATE TABLE invoice (
 
 ---
 
-## Seed Data
+Datos de Prueba (Seed)
 
-Demo data is automatically seeded for drivers, passengers, trips y invoices. You can edit or extend the seed logic in `prisma/seed.ts`.
-
----
-
-## Error Handling
-
-- 404 Not Found: Returned if a resource (e.g., trip, driver) does not exist.
-- 400 Bad Request: Returned for invalid input or validation errors.
-- 500 Internal Server Error: Returned for unexpected server errors.
+Se generan automáticamente datos de prueba para conductores, pasajeros, viajes y facturas. Puedes editar o ampliar la lógica en `prisma/seed.ts`.
 
 ---
 
-## Testing
+## Manejo de Errores
+
+* **404 No Encontrado:** Se devuelve si un recurso (por ejemplo, viaje o conductor) no existe.
+* **400 Solicitud Incorrecta:** Se devuelve para entradas inválidas o errores de validación.
+* **500 Error Interno del Servidor:** Se devuelve en caso de errores inesperados del servidor.
+
+---
+
+## Pruebas
 
 ```bash
-# Run all tests
-pnpm run test
-
 # Run e2e tests
 pnpm run test:e2e
 ```
 
 ---
 
-## Design Decisions
+## Decisiones de Diseño
 
-- Clean Architecture: domain, application, infrastructure, presentation layers
-- Prisma ORM for type-safe DB access
-- Modular, testable code (DTOs, services, repositories)
-- Geospatial queries use Haversine formula in raw SQL for driver proximity
-- Invoice is generated automatically when a trip is completed
-- Seed data covers all use cases
-
----
-
-## Contributing
-
-Contributions are welcome! Please fork the repo and submit a pull request. For major changes, open an issue first to discuss what you would like to change.
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+* Arquitectura Limpia: capas de dominio, aplicación, infraestructura y presentación
+* Prisma ORM para acceso a BD con tipos seguros
+* Código modular y testeable (DTOs, servicios, repositorios)
+* Consultas geoespaciales usando fórmula de Haversine en SQL puro
+* Las facturas se generan automáticamente al completar un viaje
+* Los datos de prueba cubren todos los casos de uso
