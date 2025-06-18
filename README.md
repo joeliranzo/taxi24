@@ -2,10 +2,7 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+<p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
     <p align="center">
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
@@ -31,54 +28,65 @@ Taxi24 is a white-label ride-hailing platform built as a single NestJS microserv
 ## Getting Started (Step-by-Step Guide)
 
 ### Prerequisites
+
 - [Node.js](https://nodejs.org/) (v16+ recommended)
 - [pnpm](https://pnpm.io/) (or npm/yarn)
 - [Docker](https://www.docker.com/products/docker-desktop) (for PostgreSQL)
 
 ### 1. Clone the Repository
+
 ```bash
 git clone <your-repo-url>
 cd taxi24
 ```
 
 ### 2. Install Dependencies
+
 ```bash
 pnpm install
 ```
 
 ### 3. Start PostgreSQL with Docker
+
 ```bash
 docker-compose up -d
 ```
+
 This will start a PostgreSQL server on `localhost:5432` with:
+
 - user: `postgres`
 - password: `postgres`
 - database: `taxi24`
 
 ### 4. Configure Environment Variables
+
 Check your `.env` file and ensure `DATABASE_URL` is set to:
+
 ```
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/taxi24
 ```
 
 ### 5. Run Database Migrations
+
 ```bash
 pnpm prisma migrate deploy
 ```
 
 ### 6. Seed the Database
+
 ```bash
 pnpm prisma db seed
 ```
 
 ### 7. Start the Application
+
 ```bash
 pnpm start:dev
 ```
 
 ### 8. Run Tests
+
 ```bash
-pnpm run test         # Unit tests
 pnpm run test:e2e     # End-to-end tests
 ```
 
@@ -87,22 +95,26 @@ pnpm run test:e2e     # End-to-end tests
 ## REST API Endpoints
 
 ### Drivers
+
 - `GET /drivers` — List all drivers
 - `GET /drivers/available` — List available drivers
 - `GET /drivers/nearby?lat={lat}&lng={lng}&radius=3` — List available drivers within 3km of a location
 - `GET /drivers/{driverId}` — Fetch a single driver by ID
 
 ### Passengers
+
 - `GET /passengers` — List all passengers
 - `GET /passengers/{passengerId}` — Fetch a single passenger by ID
 - `GET /passengers/{passengerId}/nearest-drivers?limit=3` — Return the three closest drivers to that passenger’s pick-up point
 
 ### Trips
+
 - `POST /trips` — Create a new trip, assigning a driver to a passenger
 - `PUT /trips/{tripId}/complete` — Complete a trip
 - `GET /trips/active` — List all active trips
 
 ### Invoices
+
 - `GET /invoices/trip/{tripId}` — Get invoice for a trip
 
 ---
@@ -209,6 +221,7 @@ pnpm run test:e2e
 ---
 
 ## Design Decisions
+
 - Clean Architecture: domain, application, infrastructure, presentation layers
 - Prisma ORM for type-safe DB access
 - Modular, testable code (DTOs, services, repositories)
@@ -221,3 +234,6 @@ pnpm run test:e2e
 ## Contributing
 
 Contributions are welcome! Please fork the repo and submit a pull request. For major changes, open an issue first to discuss what you would like to change.
+
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
